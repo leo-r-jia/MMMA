@@ -3,9 +3,8 @@ import { View, Text, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import CustomInput from '../components/CustomInput';
 import CustomButton from '../components/CustomButton';
 import { useConfirmEmailPresenter } from '../presenters/ConfirmEmailPresenter';
-import { useRoute } from "@react-navigation/native";
 
-function ConfirmEmailScreen({ navigation }) {
+function ConfirmEmailScreen({ route, navigation }) {
   const {
     code,
     setCode,
@@ -15,7 +14,7 @@ function ConfirmEmailScreen({ navigation }) {
     resendingCode
   } = useConfirmEmailPresenter(navigation);
 
-  const route = useRoute();
+  const { email, firstName, userSub } = route.params;
 
   const onSignInPress = () => {
     navigation.navigate('SignInScreen');
@@ -28,7 +27,7 @@ function ConfirmEmailScreen({ navigation }) {
       <View style={styles.container}>
         <View style={styles.headingContainer}>
           <Text style={styles.heading}>Confirm your email</Text>
-          <Text style={styles.text}>Hi {route?.params?.firstName}. Enter the 6-digit code we sent to {route?.params?.email}</Text>
+          <Text style={styles.text}>Hi {firstName}. Enter the 6-digit code we sent to {email}</Text>
         </View>
 
         <View style={styles.inputContainer}>
@@ -41,11 +40,14 @@ function ConfirmEmailScreen({ navigation }) {
         </View>
 
         <View style={styles.footerContainer}>
-          <CustomButton text={confirming ? 'Confirming...' : 'Confirm'} onPress={onConfirmPressed()} />
+          <CustomButton
+            text={confirming ? 'Confirming...' : 'Confirm'}
+            onPress={() => onConfirmPressed(email, firstName, userSub)}
+          />
 
           <CustomButton
             text={resendingCode ? 'Resending Code...' : 'Resend Code'}
-            onPress={onResendPress}
+            onPress={() => onResendPress(email)}
             type="SECONDARY"
           />
 

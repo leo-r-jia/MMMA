@@ -4,7 +4,7 @@ import CustomInput from '../components/CustomInput';
 import CustomButton from '../components/CustomButton';
 import { useSignUpPresenter } from '../presenters/SignUpPresenter';
 
-function SignUpScreen({ navigation: { navigate } }) {
+function SignUpScreen({ navigation }) {
   const {
     firstName,
     setFirstName,
@@ -17,7 +17,7 @@ function SignUpScreen({ navigation: { navigate } }) {
     signingUp,
     onSignUpPressed,
     checkPasswordMatch,
-  } = useSignUpPresenter(navigate);
+  } = useSignUpPresenter(navigation);
 
   return (
     <KeyboardAvoidingView

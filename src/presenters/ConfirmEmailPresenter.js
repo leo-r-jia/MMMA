@@ -11,13 +11,13 @@ const CreateUserMutation = `
   }
 `;
 
-export function useConfirmEmailPresenter(navigate) {
+export function useConfirmEmailPresenter(navigation) {
     const [code, setCode] = useState('');
     const [confirming, setConfirming] = useState(false);
     const [resendingCode, setResendingCode] = useState(false);
 
     async function onConfirmPressed(email, firstName, userSub) {
-        if (confirming) {
+        if (confirming || code=== '') {
             return;
         }
 
@@ -26,7 +26,7 @@ export function useConfirmEmailPresenter(navigate) {
         try {
             const user = await Auth.confirmSignUp(email, code);
             createUserInDatabase(email, firstName, userSub);
-            navigate('HomeScreen', { email, firstName });
+            navigation.navigate('HomeScreen', { email, firstName });
         } catch (error) {
             console.error("Confirmation error: ", error);
         }

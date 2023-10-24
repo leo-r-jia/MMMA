@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, View, Text, StyleSheet, Image, Alert, ImageBackground } from "react-native";
+import { SafeAreaView, View, Text, StyleSheet, Image, Alert, ImageBackground, TouchableOpacity } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import CustomButton from "../components/CustomButton";
 import * as ImagePicker from "expo-image-picker";
@@ -75,8 +75,8 @@ function HomeScreen({ navigation: { navigate } }) {
 
     const [scans, setScans] = useState([]);
     const [lastScanUri, setLastScanUri] = useState();
+    const [lastScanDate, setLastScanDate] = useState();
 
-    // Call ScansData with a user ID and handle the returned scans
     async function fetchScansForUser(userId) {
         try {
             setScans(await ScansData(userId));
@@ -155,9 +155,15 @@ function HomeScreen({ navigation: { navigate } }) {
         Storage.get(fileId, { level: "private" }).then(setLastScanUri);
     }
 
+    const onProfilePress = () => {
+        // console.log("PROFILE")
+        navigate("ProfileScreen", { givenName });
+    };
+
     useEffect(() => {
-        if (scans.length>0){
+        if (scans.length > 0) {
             getLastScanUri(scans.at(0).id);
+            setLastScanDate(moment(scans.at(0).date, "Do MMM YYYY").fromNow().includes('hours', 'seconds', 'minutes') ? 'Today' : moment(scans.at(0).date, "Do MMM YYYY").fromNow());
         }
     }, [scans]);
 
@@ -172,14 +178,19 @@ function HomeScreen({ navigation: { navigate } }) {
                             <Text style={styles.subText}>Hi,</Text>
                             <Text style={styles.mainText}>{givenName}</Text>
                         </View>
-                        <Image style={styles.profile} source={require('../../assets/icons/user.png')} />
+                        <TouchableOpacity onPress={() => onProfilePress()}>
+                            <Image
+                                style={styles.profile}
+                                source={require('../../assets/icons/user.png')}
+                            />
+                        </TouchableOpacity>
                     </View>
                     <View style={styles.middleContainer}>
                         <View style={styles.greyContainer}>
                             {scans.length > 0 ? (
                                 <React.Fragment>
                                     <Text style={styles.subText}>Your last scan was:</Text>
-                                    <Text style={styles.mainTextSm}>{moment(scans.at(0).date, "Do MMM YYYY").fromNow().includes('hours', 'seconds', 'minutes') ? 'Today' : moment(scans.at(0).date, "Do MMM YYYY").fromNow()}</Text>
+                                    <Text style={styles.mainTextSm}>{lastScanDate}</Text>
                                     <View style={styles.whiteContainer}>
                                         <Image src={lastScanUri} style={styles.lastScanImage}></Image>
                                     </View>
@@ -244,7 +255,8 @@ const styles = StyleSheet.create({
         fontSize: 30,
         fontWeight: '700',
         color: '#3a58e0',
-        marginBottom: 5
+        marginBottom: 5,
+        textTransform: 'capitalize'
     },
     profile: {
         width: 55,

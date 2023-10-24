@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Alert } from 'react-native';
 import { signUp } from '../models/AuthModel';
 
-export function useSignUpPresenter(navigate) {
+export function useSignUpPresenter(navigation) {
     const [firstName, setFirstName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -19,7 +19,7 @@ export function useSignUpPresenter(navigate) {
         try {
             const user = await signUp(firstName, email, password);
             const userSub = user.userSub;
-            navigate('ConfirmEmailScreen', { email, firstName, userSub });
+            navigation.navigate("ConfirmEmailScreen", { email: email, firstName: firstName, userSub: userSub });
         } catch (error) {
             Alert.alert('Sign Up Failed', error.message.replace('Username', 'Email'), [{ text: 'Try Again' }]);
         }
