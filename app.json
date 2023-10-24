@@ -11,6 +11,14 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "microphonePermission": "This app does not require microphone access for scans. You can deny this permission."
+        }
+      ]
+    ],
     "assetBundlePatterns": [
       "**/*"
     ],

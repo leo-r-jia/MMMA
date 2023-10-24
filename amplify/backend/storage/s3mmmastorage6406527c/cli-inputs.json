@@ -1,0 +1,12 @@
+{
+  "resourceName": "s3mmmastorage6406527c",
+  "bucketName": "mmma-storage-6406527c",
+  "policyUUID": "f530cc36",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ]
+}
