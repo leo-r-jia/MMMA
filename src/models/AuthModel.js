@@ -1,6 +1,7 @@
 // AuthModel.js
 import { Auth, API } from "aws-amplify";
 
+// Function to sign in a user using their email and password
 export async function signIn(email, password) {
     try {
         const user = await Auth.signIn(email, password);
@@ -10,6 +11,7 @@ export async function signIn(email, password) {
     }
 }
 
+// Function to sign up a new user with their first name, email, and password
 export async function signUp(firstName, email, password) {
     try {
         const user = await Auth.signUp({
@@ -28,6 +30,7 @@ export async function signUp(firstName, email, password) {
     }
 }
 
+// Function to confirm a user's sign-up with a confirmation code
 export async function confirmSignUp(email, code) {
     try {
         await Auth.confirmSignUp(email, code);
@@ -36,6 +39,7 @@ export async function confirmSignUp(email, code) {
     }
 }
 
+// Function to resend a confirmation code to a user's email
 export async function resendCode(email) {
     try {
         await await Auth.resendSignUp(email);
@@ -55,6 +59,7 @@ const CreateUserMutation = `
   }
 `;
 
+// Function to create a user record in the database
 export async function createUserInDatabase(userSub, firstName, email) {
     try {
         const userData = {
@@ -72,6 +77,7 @@ export async function createUserInDatabase(userSub, firstName, email) {
     }
 }
 
+// Function to sign the user out
 export async function signOut() {
     try {
         await Auth.signOut();
