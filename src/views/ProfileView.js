@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, Image, Button } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, Image } from 'react-native';
 import CustomButton from '../components/CustomButton';
 import { Auth } from 'aws-amplify';
 
-function ProfileScreen({ navigation: { navigate }, route }) {
+function ProfileScreen({ navigation, route }) {
 
     const { givenName } = route.params;
     const back = "&lt;";
@@ -12,17 +12,31 @@ function ProfileScreen({ navigation: { navigate }, route }) {
         try {
             await Auth.signOut();
         }
-        catch(error){
+        catch (error) {
             console.error("Sign out error: ", error)
         }
-        
-        navigate('WelcomeScreen');
+
+        navigation.navigate('WelcomeScreen');
+    };
+
+    const onBackPress = () => {
+        navigation.goBack();
     };
 
     return (
         <SafeAreaView style={styles.wrapper}>
             <View style={styles.container}>
-                <View style={styles.buttonContainer}><Button title="<" /></View>
+                <View style={styles.buttonContainer}>
+                    <View>
+                        <CustomButton
+                            text="Go Back"
+                            onPress={onBackPress}
+                            type="SECONDARY"
+                            bdColor="white"
+                            fgColor="#3a58e0"
+                        />
+                    </View>
+                </View>
                 <View style={styles.profileContainer}>
                     <Image
                         style={styles.profile}
@@ -69,13 +83,14 @@ const styles = StyleSheet.create({
     },
     profileContainer: {
         flex: 4,
-        paddingTop: 30,
+        marginTop: -30,
         justifyContent: 'flex-start',
         alignItems: 'center',
         width: '85%',
     },
     buttonContainer: {
-        width: '100%'
+        width: '95%',
+        alignItems: 'flex-start',
     },
     footerContainer: {
         width: '85%',

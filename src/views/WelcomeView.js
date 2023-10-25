@@ -1,16 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
 import CustomButton from '../components/CustomButton';
+import { useWelcomePresenter } from '../presenters/WelcomePresenter';
 
-function WelcomeScreen({ navigation: { navigate } }) {
+function WelcomeView({ navigation }) {
 
-    const onSignInPress = () => {
-        navigate('SignInScreen');
-    };
-
-    const onSignUpPress = () => {
-        navigate('SignUpScreen');
-    };
+    const {
+        onSignInPress,
+        onSignUpPress
+    } = useWelcomePresenter(navigation);
 
     return (
         <SafeAreaView style={styles.wrapper}>
@@ -86,4 +84,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default WelcomeScreen;
+export default WelcomeView;

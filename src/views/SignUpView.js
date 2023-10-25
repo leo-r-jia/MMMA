@@ -1,10 +1,13 @@
+// SignUpView.js
 import React from 'react';
 import { View, Text, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import CustomInput from '../components/CustomInput';
 import CustomButton from '../components/CustomButton';
 import { useSignUpPresenter } from '../presenters/SignUpPresenter';
 
-function SignUpScreen({ navigation }) {
+// Sign up screen of the MMMA
+function SignUpView({ navigation }) {
+  // Initialise and destructure various states and functions using the SignUpPresenter
   const {
     firstName,
     setFirstName,
@@ -17,6 +20,7 @@ function SignUpScreen({ navigation }) {
     signingUp,
     onSignUpPressed,
     checkPasswordMatch,
+    onSignInPressed,
   } = useSignUpPresenter(navigation);
 
   return (
@@ -49,13 +53,14 @@ function SignUpScreen({ navigation }) {
           <View style={styles.buttonContainer}>
             <CustomButton text={signingUp ? 'Signing Up...' : 'Sign Up'} onPress={onSignUpPressed} />
           </View>
-          <CustomButton text="Have an account? Sign in" onPress={() => navigate('SignInScreen')} type="TERTIARY" />
+          <CustomButton text="Have an account? Sign in" onPress={onSignInPressed} type="TERTIARY" />
         </View>
       </View>
     </KeyboardAvoidingView>
   );
 }
 
+// Styles for components in SignUpView
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
@@ -99,4 +104,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUpScreen;
+export default SignUpView;

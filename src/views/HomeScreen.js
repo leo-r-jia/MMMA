@@ -4,7 +4,7 @@ import { useRoute } from "@react-navigation/native";
 import CustomButton from "../components/CustomButton";
 import * as ImagePicker from "expo-image-picker";
 import uuid from 'react-native-uuid';
-import { API, Storage } from "aws-amplify";
+import { API, Storage, Auth } from "aws-amplify";
 import Scans from "../components/Scans";
 import moment from 'moment';
 import ScansData from "../models/ScansData";
@@ -28,10 +28,6 @@ const ensureDirExists = async () => {
     }
 };
 
-//TESTING
-import { Auth } from "aws-amplify";
-import { graphqlOperation } from "aws-amplify";
-
 function HomeScreen({ navigation: { navigate } }) {
     const route = useRoute();
     const [givenName, setGivenName] = useState();
@@ -51,43 +47,10 @@ function HomeScreen({ navigation: { navigate } }) {
         }
     };
 
-    // TESTING REMOVE LATER //
-    // const [givenName, setGivenName] = useState();
-    // const [userId, setuserId] = useState();
-
-    // useEffect(() => {
-    //     getUser();
-    // }, []);
-
-    // async function getUser() {
-    //     try {
-    //         user = await Auth.signIn('leo.r.jia@outlook.com', 'LeoJia13!');
-    //         setGivenName(user.attributes.given_name);
-    //         setuserId(user.attributes.sub);
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // }
-
-    // Auth.currentCredentials();
-
-    // END OF TESTING //
-
     const [scans, setScans] = useState([]);
     const [lastScanUri, setLastScanUri] = useState();
     const [lastScanDate, setLastScanDate] = useState();
 
-    async function fetchScansForUser(userId) {
-        try {
-            setScans(await ScansData(userId));
-        } catch (error) {
-            console.error('Error fetching scans:', error);
-        }
-    }
-
-    useEffect(() => {
-        fetchScansForUser(userId);
-    }, [userId]);
 
     async function scanMoles() {
         let result;

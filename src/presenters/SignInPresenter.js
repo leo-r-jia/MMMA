@@ -1,14 +1,22 @@
 // SignInPresenter.js
 import { useState } from "react";
 import { signIn } from "../models/AuthModel";
+import { Alert } from "react-native";
 
-export function useSignInPresenter( navigation ) {
+// Custom hook for the Sign In screen logic
+export function useSignInPresenter(navigation) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [signingIn, setSigningIn] = useState(false);
-    const [error, setError] = useState(null);
 
+    // Navigate to sign up screen
+    const onSignUpPress = () => {
+        navigation.navigate("SignUpScreen");
+    };
+
+    // Sign in function
     async function onSignInPressed() {
+        // Prevent multiple sign in attempts
         if (signingIn) {
             return;
         }
@@ -16,10 +24,14 @@ export function useSignInPresenter( navigation ) {
         setSigningIn(true);
 
         try {
-            const user = await signIn(email, password);
+            // Call sign in from AuthModel
+            await signIn(email, password);
             navigation.navigate("HomeScreen");
         } catch (error) {
-            setError(error);
+            // Handle any sign in errors
+            Alert.alert("Sign In Failed", error.message.replace("Username", "Email").replace('Custom auth lambda trigger is not configured for the user pool', 'Please enter valid account details'), [
+                { text: "Try Again" },
+            ]);
         }
 
         setSigningIn(false);
@@ -32,6 +44,6 @@ export function useSignInPresenter( navigation ) {
         setPassword,
         signingIn,
         onSignInPressed,
-        error
+        onSignUpPress,
     };
 }

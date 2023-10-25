@@ -1,26 +1,14 @@
-// SignInScreen.js
+// SignInView.js
 import React, { useEffect } from "react";
 import { View, Text, StyleSheet, KeyboardAvoidingView, Alert } from "react-native";
 import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
 import { useSignInPresenter } from "../presenters/SignInPresenter";
 
-function SignInScreen({ navigation }) {
-    const { email, setEmail, password, setPassword, signingIn, onSignInPressed, error } = useSignInPresenter(
+function SignInView({ navigation }) {
+    const { email, setEmail, password, setPassword, signingIn, onSignInPressed, onSignUpPress } = useSignInPresenter(
         navigation
     );
-
-    const onSignUpPress = () => {
-        navigation.navigate("SignUpScreen");
-    };
-
-    useEffect(() => {
-        if (error) {
-            Alert.alert("Sign In Failed", error.message.replace("Username", "Email"), [
-                { text: "Try Again" },
-            ]);
-        }
-    }, [error]);
 
     return (
         <KeyboardAvoidingView
@@ -109,4 +97,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default SignInScreen;
+export default SignInView;

@@ -1,3 +1,4 @@
+// ConfirmEmailView.js
 import React from 'react';
 import { View, Text, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import CustomInput from '../components/CustomInput';
@@ -11,14 +12,12 @@ function ConfirmEmailScreen({ route, navigation }) {
     confirming,
     onConfirmPressed,
     onResendPress,
-    resendingCode
-  } = useConfirmEmailPresenter(navigation);
-
-  const { email, firstName, userSub } = route.params;
-
-  const onSignInPress = () => {
-    navigation.navigate('SignInScreen');
-  };
+    resendingCode,
+    onSignInPress,
+    email,
+    firstName,
+    userSub
+  } = useConfirmEmailPresenter(route, navigation);
 
   return (
     <KeyboardAvoidingView style={styles.wrapper}
@@ -42,12 +41,12 @@ function ConfirmEmailScreen({ route, navigation }) {
         <View style={styles.footerContainer}>
           <CustomButton
             text={confirming ? 'Confirming...' : 'Confirm'}
-            onPress={() => onConfirmPressed(email, firstName, userSub)}
+            onPress={onConfirmPressed}
           />
 
           <CustomButton
             text={resendingCode ? 'Resending Code...' : 'Resend Code'}
-            onPress={() => onResendPress(email)}
+            onPress={onResendPress}
             type="SECONDARY"
           />
 
