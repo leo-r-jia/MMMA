@@ -1,5 +1,5 @@
 import uuid from 'react-native-uuid';
-import { API, Storage, Auth } from "aws-amplify";
+import { API, Storage, Auth, graphqlOperation } from "aws-amplify";
 import moment from 'moment';
 import * as FileSystem from 'expo-file-system';
 
@@ -13,10 +13,6 @@ mutation CreateScan($input: CreateScanInput!) {
   }
 }`
 
-// User attributes
-const [givenName, setGivenName] = useState();
-const [userId, setuserId] = useState();
-
 // Define internal directory for app
 const imgDir = FileSystem.documentDirectory + 'images';
 
@@ -27,59 +23,68 @@ const ensureDirExists = async () => {
     }
 };
 
-// Get current authenticated user
-useEffect(() => {
-    currentAuthenticatedUser();
-}, []);
-
-async function currentAuthenticatedUser() {
+export async function currentAuthenticatedUser() {
     try {
         const user = await Auth.currentAuthenticatedUser();
-        // Set userId and givenName of current authenticated user
-        setuserId(user.attributes.sub);
-        setGivenName(user.attributes.given_name);
-    } catch (err) {
-        console.log(err);
+        return user;
+    } catch (error) {
+        throw error;
     }
 };
 
-// Fetch scans for user to populate dashboard
-const fetchScansForUser = async (userId) => {
+export const getLastScanUri = async (fileId) => {
     try {
-        return ScansData(userId);
+        const file = await Storage.get(fileId, { level: 'private' });
+        return file;
     } catch (error) {
-        console.error('Error fetching scans:', error);
-        return [];
-    }
-};
-
-
-async function fetchScansForUser(userId) {
-    try {
-        setScans(await ScansData(userId));
-    } catch (error) {
-        console.error('Error fetching scans:', error);
+        console.error('Error getting last scan uri:', error);
     }
 }
 
-useEffect(() => {
-    fetchScansForUser(userId);
-}, [userId]);
+export const fetchScansForUser = async (userId) => {
+    const listScansQuery = `
+        query ListScans {
+            listScans(
+                filter: { userID: { eq: "${userId}" } }
+                ) {
+                items {
+                    id
+                    date
+                    userID
+                    }
+                }
+            }
+        `;
+
+    try {
+        const response = await API.graphql(graphqlOperation(listScansQuery));
+        const scans = response.data.listScans.items;
+
+        // Sort the scans by ID in ascending order
+        scans.sort((a, b) => b.id.localeCompare(a.id));
+
+        return scans;
+    } catch (error) {
+        throw error;
+    }
+}
 
 // Save scan in internal directory
-const saveScan = async (scan) => {
+export const saveScan = async (scan) => {
     await ensureDirExists();
     // Create fileKey for the image
     const fileKey = `${moment().format()}${uuid.v4()}.jpg`;
     const dest = imgDir + fileKey;
     // Copy the image from cached memory to internal directory
     await FileSystem.copyAsync({ from: scan.assets[0].uri, to: dest });
-    return { fileKey, dest };
+    await uploadScan(fileKey, dest);
+    return fileKey;
 };
 
 // Upload scan to cloud storage
 const uploadScan = async (fileKey, imagUri) => {
     try {
+        await currentAuthenticatedUser();
         const response = await fetch(imagUri);
         const blob = await response.blob();
         // Upload image to private S3 bucket
@@ -87,7 +92,6 @@ const uploadScan = async (fileKey, imagUri) => {
             level: "private",
             contentType: "image/jpeg",
         });
-        return fileKey;
     } catch (error) {
         console.log("Error uploading file: ", error);
         return null;
@@ -95,12 +99,12 @@ const uploadScan = async (fileKey, imagUri) => {
 };
 
 // Create the scan details in database
-const createScanInDatabase = async (fileKey, userId) => {
+export const createScanInDatabase = async (fileKey, userId) => {
     try {
         const scanData = {
             id: fileKey,
             date: moment().format('Do MMM YYYY'),
-            userID: userId,
+            userID: userId
         };
         await API.graphql({
             query: CreateScanMutation,
@@ -111,13 +115,4 @@ const createScanInDatabase = async (fileKey, userId) => {
         console.error('Error creating scan:', error);
         return false;
     }
-};
-
-export {
-    fetchScansForUser,
-    saveScan,
-    uploadScan,
-    createScanInDatabase,
-    givenName,
-    userId
 };

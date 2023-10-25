@@ -5,7 +5,9 @@ import CustomInput from '../components/CustomInput';
 import CustomButton from '../components/CustomButton';
 import { useConfirmEmailPresenter } from '../presenters/ConfirmEmailPresenter';
 
+// Confirm email screen of the MMMA
 function ConfirmEmailScreen({ route, navigation }) {
+  // Initialise and destructure various states and functions using the ConfirmEmailPresenter
   const {
     code,
     setCode,
@@ -62,6 +64,7 @@ function ConfirmEmailScreen({ route, navigation }) {
   );
 }
 
+// Styles for components of the confirm email view
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',

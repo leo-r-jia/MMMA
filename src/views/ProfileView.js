@@ -1,27 +1,16 @@
+// ProfileView.js
 import React from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Image } from 'react-native';
 import CustomButton from '../components/CustomButton';
-import { Auth } from 'aws-amplify';
+import { useProfilePresenter } from '../presenters/ProfilePresenter';
 
+// Profile screen of the MMMA
 function ProfileScreen({ navigation, route }) {
-
-    const { givenName } = route.params;
-    const back = "&lt;";
-
-    const onLogoutPress = async () => {
-        try {
-            await Auth.signOut();
-        }
-        catch (error) {
-            console.error("Sign out error: ", error)
-        }
-
-        navigation.navigate('WelcomeScreen');
-    };
-
-    const onBackPress = () => {
-        navigation.goBack();
-    };
+    const { givenName,
+        onLogoutPress,
+        onBackPress,
+        loggingOut
+    } = useProfilePresenter(navigation, route);
 
     return (
         <SafeAreaView style={styles.wrapper}>
@@ -46,7 +35,7 @@ function ProfileScreen({ navigation, route }) {
                 </View>
                 <View style={styles.footerContainer}>
                     <CustomButton
-                        text="Log Out"
+                        text={loggingOut ? "Logging Out..." : "Log Out"}
                         onPress={onLogoutPress}
                         type="SECONDARY"
                         bdColor="#3a58e0"

@@ -32,9 +32,9 @@ export function useSignInPresenter(navigation) {
             Alert.alert("Sign In Failed", error.message.replace("Username", "Email").replace('Custom auth lambda trigger is not configured for the user pool', 'Please enter valid account details'), [
                 { text: "Try Again" },
             ]);
+        } finally {
+            setSigningIn(false);
         }
-
-        setSigningIn(false);
     }
 
     return {

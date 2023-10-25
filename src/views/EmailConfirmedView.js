@@ -1,14 +1,14 @@
-// SignInView.js
+// EmailConfirmedView.js
 import React from "react";
 import { View, Text, StyleSheet, KeyboardAvoidingView } from "react-native";
 import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
 import { useSignInPresenter } from "../presenters/SignInPresenter";
 
-// Sign in screen of the MMMA
-function SignInView({ navigation }) {
+// Email confirmed view of the MMMA
+function EmailConfirmedView({ navigation }) {
     // Initialise and destructure various states and functions using the SignInPresenter
-    const { email, setEmail, password, setPassword, signingIn, onSignInPressed, onSignUpPress } = useSignInPresenter(
+    const { email, setEmail, password, setPassword, signingIn, onSignInPressed } = useSignInPresenter(
         navigation
     );
 
@@ -20,7 +20,7 @@ function SignInView({ navigation }) {
         >
             <View style={styles.container}>
                 <View style={styles.headingContainer}>
-                    <Text style={styles.heading}>Welcome Back</Text>
+                    <Text style={styles.heading}>Email Confirmed</Text>
                 </View>
                 <View style={styles.inputContainer}>
                     <CustomInput
@@ -44,13 +44,6 @@ function SignInView({ navigation }) {
                         />
                     </View>
 
-                    <View style={styles.footerContainer}>
-                        <CustomButton
-                            text="Don't have an account? Create one"
-                            onPress={onSignUpPress}
-                            type="TERTIARY"
-                        />
-                    </View>
                 </View>
             </View>
         </KeyboardAvoidingView>
@@ -100,4 +93,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default SignInView;
+export default EmailConfirmedView;

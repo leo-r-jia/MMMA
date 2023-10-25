@@ -1,135 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { SafeAreaView, View, Text, StyleSheet, Image, Alert, ImageBackground, TouchableOpacity } from "react-native";
-import { useRoute } from "@react-navigation/native";
+//HomeView.js
+import React from "react";
+import { SafeAreaView, View, Text, StyleSheet, Image, ImageBackground, TouchableOpacity } from "react-native";
 import CustomButton from "../components/CustomButton";
-import * as ImagePicker from "expo-image-picker";
-import uuid from 'react-native-uuid';
-import { API, Storage, Auth } from "aws-amplify";
 import Scans from "../components/Scans";
-import moment from 'moment';
-import ScansData from "../models/ScansData";
-import * as FileSystem from 'expo-file-system';
+import useHomePresenter from "../presenters/HomePresenter";
 
-const CreateScanMutation = `
-mutation CreateScan($input: CreateScanInput!) {
-  createScan(input: $input) {
-    id
-    date
-    userID
-  }
-}`
-
-const imgDir = FileSystem.documentDirectory + 'images/';
-
-const ensureDirExists = async () => {
-    const dirInfo = await FileSystem.getInfoAsync(imgDir);
-    if (!dirInfo.exists) {
-        await FileSystem.makeDirectoryAsync(imgDir, { intermediates: true });
-    }
-};
-
-function HomeScreen({ navigation: { navigate } }) {
-    const route = useRoute();
-    const [givenName, setGivenName] = useState();
-    const [userId, setuserId] = useState();
-
-    useEffect(() => {
-        currentAuthenticatedUser();
-    }, []);
-
-    async function currentAuthenticatedUser() {
-        try {
-            const user = await Auth.currentAuthenticatedUser();
-            setuserId(user.attributes.sub);
-            setGivenName(user.attributes.given_name);
-        } catch (err) {
-            console.log(err);
-        }
-    };
-
-    const [scans, setScans] = useState([]);
-    const [lastScanUri, setLastScanUri] = useState();
-    const [lastScanDate, setLastScanDate] = useState();
-
-
-    async function scanMoles() {
-        let result;
-
-        try {
-            await ImagePicker.requestCameraPermissionsAsync();
-
-            result = await ImagePicker.launchCameraAsync({
-                cameraType: ImagePicker.CameraType.back,
-                quality: 0.1,
-            })
-
-            if (!result.canceled) {
-                await saveScan(result);
-            }
-
-        } catch (error) {
-            Alert.alert("Error Uploading Scan", error.message, "Try Again")
-            console.log(error);
-        }
-    }
-
-    async function saveScan(scan) {
-        await ensureDirExists();
-
-        const fileKey = `${moment().format()}${uuid.v4()}.jpg`;
-        const dest = imgDir + fileKey;
-        await FileSystem.copyAsync({ from: scan.assets[0].uri, to: dest });
-
-        uploadScan(fileKey, dest);
-    }
-
-    async function uploadScan(fileKey, imagUri) {
-        try {
-            const response = await fetch(imagUri);
-            const blob = await response.blob();
-            await Storage.put(fileKey, blob, {
-                level: "private",
-                contentType: "image/jpeg",
-            });
-            createScanInDatabase(fileKey);
-        } catch (error) {
-            console.log("Error uploading file: ", error);
-        }
-    }
-
-    async function createScanInDatabase(fileKey) {
-        try {
-            const scanData = {
-                id: fileKey,
-                date: moment().format('Do MMM YYYY'),
-                userID: userId,
-            };
-            await API.graphql({
-                query: CreateScanMutation,
-                variables: { input: scanData },
-            });
-            fetchScansForUser(userId);
-        } catch (error) {
-            console.error('Error creating scan:', error);
-        }
-    }
-
-    async function getLastScanUri(fileId) {
-        Storage.get(fileId, { level: "private" }).then(setLastScanUri);
-    }
-
-    const onProfilePress = () => {
-        // console.log("PROFILE")
-        navigate("ProfileScreen", { givenName });
-    };
-
-    useEffect(() => {
-        if (scans.length > 0) {
-            getLastScanUri(scans.at(0).id);
-            setLastScanDate(moment(scans.at(0).date, "Do MMM YYYY").fromNow().includes('hours', 'seconds', 'minutes') ? 'Today' : moment(scans.at(0).date, "Do MMM YYYY").fromNow());
-        }
-    }, [scans]);
-
+function HomeScreen({ navigation }) {
+    const {
+        onProfilePress,
+        givenName,
+        scans,
+        lastScanDate,
+        lastScanUri,
+        scanMoles
+    } = useHomePresenter(navigation);
 
     return (
         <ImageBackground source={require('../../assets/backgrounds/HomeBg.png')} style={styles.imgBg} resizeMode="cover" >
@@ -276,4 +160,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default HomeScreen;
+export default HomeScreen; 

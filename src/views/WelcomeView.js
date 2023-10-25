@@ -3,8 +3,8 @@ import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
 import CustomButton from '../components/CustomButton';
 import { useWelcomePresenter } from '../presenters/WelcomePresenter';
 
+// Welcome screen of the MMMA
 function WelcomeView({ navigation }) {
-
     const {
         onSignInPress,
         onSignUpPress
@@ -41,6 +41,7 @@ function WelcomeView({ navigation }) {
     );
 };
 
+// Styles for components of the Welcome View
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#3a58e0',

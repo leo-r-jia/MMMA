@@ -1,7 +1,7 @@
 // SignUpPresenter.js
 import { useState } from 'react';
 import { Alert } from 'react-native';
-import { signUp } from '../models/AuthModel';
+import { signUp, signIn } from '../models/AuthModel';
 
 export function useSignUpPresenter(navigation) {
     const [firstName, setFirstName] = useState('');
@@ -28,7 +28,7 @@ export function useSignUpPresenter(navigation) {
             // Sign up and navigate to confirm email screen if successful
             const user = await signUp(firstName, email, password);
             const userSub = user.userSub;
-            navigation.navigate("ConfirmEmailScreen", { email: email, firstName: firstName, userSub: userSub });
+            navigation.navigate("ConfirmEmailScreen", { email: email, firstName: firstName, userSub: userSub, password: password });
         } catch (error) {
             // Display alert message to user based on error
             if (error.message.includes('validation') || error.message.includes('conform')) {
