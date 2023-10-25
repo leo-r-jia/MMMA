@@ -82,19 +82,35 @@ export const saveScan = async (scan) => {
 };
 
 // Upload scan to cloud storage
+const MAX_RETRIES = 3; // Maximum number of retry attempts
+const RETRY_DELAY_MS = 1000; // Delay between retry attempts in milliseconds
+
 const uploadScan = async (fileKey, imagUri) => {
-    try {
-        await currentAuthenticatedUser();
-        const response = await fetch(imagUri);
-        const blob = await response.blob();
-        // Upload image to private S3 bucket
-        await Storage.put(fileKey, blob, {
-            level: "private",
-            contentType: "image/jpeg",
-        });
-    } catch (error) {
-        console.log("Error uploading file: ", error);
-        return null;
+    let attempt = 0;
+
+    while (attempt < MAX_RETRIES) {
+        try {
+            await currentAuthenticatedUser();
+            const response = await fetch(imagUri);
+            const blob = await response.blob();
+            // Upload image to private S3 bucket
+            await Storage.put(fileKey, blob, {
+                level: "private",
+                contentType: "image/jpeg",
+            });
+            // If the upload is successful, break out of the loop
+            break;
+        } catch (error) {
+            console.log(`Error uploading file (attempt ${attempt + 1}):`, error);
+            if (attempt < MAX_RETRIES - 1) {
+                // If there are more attempts remaining, wait for a while before retrying
+                await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
+            } else {
+                // If there are no more attempts remaining, return null
+                return null;
+            }
+        }
+        attempt++;
     }
 };
 
