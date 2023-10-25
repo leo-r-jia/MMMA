@@ -16,6 +16,7 @@ mutation CreateScan($input: CreateScanInput!) {
 // Define internal directory for app
 const imgDir = FileSystem.documentDirectory + 'images';
 
+// Ensure that a directory exists, create it if it doesn't
 const ensureDirExists = async () => {
     const dirInfo = await FileSystem.getInfoAsync(imgDir);
     if (!dirInfo.exists) {
@@ -23,8 +24,10 @@ const ensureDirExists = async () => {
     }
 };
 
+// Function to retrieve the current authenticated user
 export async function currentAuthenticatedUser() {
     try {
+        // Get the current authenticated user using AWS Amplify Auth
         const user = await Auth.currentAuthenticatedUser();
         return user;
     } catch (error) {
@@ -32,8 +35,10 @@ export async function currentAuthenticatedUser() {
     }
 };
 
+// Function to get the URI of the last saved scan by its file ID
 export const getLastScanUri = async (fileId) => {
     try {
+        // Retrieve the scan file URI from storage using the provided file ID
         const file = await Storage.get(fileId, { level: 'private' });
         return file;
     } catch (error) {
@@ -41,7 +46,9 @@ export const getLastScanUri = async (fileId) => {
     }
 }
 
+// Function to fetch scans associated with a specific user
 export const fetchScansForUser = async (userId) => {
+    // GraphQL query to list scans filtered by user ID
     const listScansQuery = `
         query ListScans {
             listScans(
@@ -57,6 +64,7 @@ export const fetchScansForUser = async (userId) => {
         `;
 
     try {
+        // Execute the GraphQL query using AWS Amplify API
         const response = await API.graphql(graphqlOperation(listScansQuery));
         const scans = response.data.listScans.items;
 
@@ -117,11 +125,13 @@ const uploadScan = async (fileKey, imagUri) => {
 // Create the scan details in database
 export const createScanInDatabase = async (fileKey, userId) => {
     try {
+        // Create an object containing scan data
         const scanData = {
             id: fileKey,
             date: moment().format('Do MMM YYYY'),
             userID: userId
         };
+        // Use the GraphQL API to create a new scan record in the database
         await API.graphql({
             query: CreateScanMutation,
             variables: { input: scanData },
