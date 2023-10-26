@@ -1,7 +1,7 @@
 import { API, graphqlOperation } from "aws-amplify";
 
 const ScansData = async (userId) => {
-    const listScansQuery = `
+  const listScansQuery = `
         query ListScans {
             listScans(
                 filter: { userID: { eq: "${userId}" } }
@@ -14,18 +14,18 @@ const ScansData = async (userId) => {
                 }
             }
         `;
-    try {
-        const response = await API.graphql(graphqlOperation(listScansQuery));
-        const scans = response.data.listScans.items;
+  try {
+    const response = await API.graphql(graphqlOperation(listScansQuery));
+    const scans = response.data.listScans.items;
 
-        // Sort the scans by ID in ascending order
-        scans.sort((a, b) => b.id.localeCompare(a.id));
+    // Sort the scans by ID in ascending order
+    scans.sort((a, b) => b.id.localeCompare(a.id));
 
-        return scans;
-    } catch (error) {
-        console.error('Error querying scans: ', error);
-        return [];
-    }
-}
+    return scans;
+  } catch (error) {
+    console.error("Error querying scans: ", error);
+    return [];
+  }
+};
 
 export default ScansData;

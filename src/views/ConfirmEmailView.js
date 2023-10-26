@@ -1,9 +1,9 @@
 // ConfirmEmailView.js
-import React from 'react';
-import { View, Text, StyleSheet, KeyboardAvoidingView } from 'react-native';
-import CustomInput from '../components/CustomInput';
-import CustomButton from '../components/CustomButton';
-import { useConfirmEmailPresenter } from '../presenters/ConfirmEmailPresenter';
+import React from "react";
+import { View, Text, StyleSheet, KeyboardAvoidingView } from "react-native";
+import CustomInput from "../components/CustomInput";
+import CustomButton from "../components/CustomButton";
+import { useConfirmEmailPresenter } from "../presenters/ConfirmEmailPresenter";
 
 // Confirm email screen of the MMMA
 function ConfirmEmailScreen({ route, navigation }) {
@@ -18,17 +18,21 @@ function ConfirmEmailScreen({ route, navigation }) {
     onSignInPress,
     email,
     firstName,
-    userSub
+    userSub,
   } = useConfirmEmailPresenter(route, navigation);
 
   return (
-    <KeyboardAvoidingView style={styles.wrapper}
+    <KeyboardAvoidingView
+      style={styles.wrapper}
       behavior="padding"
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -500}>
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : -500}
+    >
       <View style={styles.container}>
         <View style={styles.headingContainer}>
           <Text style={styles.heading}>Confirm your email</Text>
-          <Text style={styles.text}>Hi {firstName}. Enter the 6-digit code we sent to {email}</Text>
+          <Text style={styles.text}>
+            Hi {firstName}. Enter the 6-digit code we sent to {email}
+          </Text>
         </View>
 
         <View style={styles.inputContainer}>
@@ -36,18 +40,18 @@ function ConfirmEmailScreen({ route, navigation }) {
             placeholder="Enter your confirmation code"
             value={code}
             setValue={setCode}
-            keyboardType='numeric'
+            keyboardType="numeric"
           />
         </View>
 
         <View style={styles.footerContainer}>
           <CustomButton
-            text={confirming ? 'Confirming...' : 'Confirm'}
+            text={confirming ? "Confirming..." : "Confirm"}
             onPress={onConfirmPressed}
           />
 
           <CustomButton
-            text={resendingCode ? 'Resending Code...' : 'Resend Code'}
+            text={resendingCode ? "Resending Code..." : "Resend Code"}
             onPress={onResendPress}
             type="SECONDARY"
           />
@@ -58,55 +62,54 @@ function ConfirmEmailScreen({ route, navigation }) {
             type="TERTIARY"
           />
         </View>
-
       </View>
-    </KeyboardAvoidingView >
+    </KeyboardAvoidingView>
   );
 }
 
 // Styles for components of the confirm email view
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     flex: 1,
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
   },
   wrapper: {
     flex: 1,
-    backgroundColor: 'white',
-    alignItems: 'center',
-    width: '100%'
+    backgroundColor: "white",
+    alignItems: "center",
+    width: "100%",
   },
   heading: {
     fontSize: 40,
-    fontWeight: '700',
-    color: '#3a58e0',
+    fontWeight: "700",
+    color: "#3a58e0",
   },
   text: {
     fontSize: 16,
-    color: '#3a58e0',
-    paddingTop: 20
+    color: "#3a58e0",
+    paddingTop: 20,
   },
   headingContainer: {
     flex: 4,
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    width: '85%',
+    justifyContent: "center",
+    alignItems: "flex-start",
+    width: "85%",
   },
   inputContainer: {
-    width: '85%',
+    width: "85%",
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center",
   },
   footerContainer: {
-    width: '85%',
-    alignItems: 'center',
+    width: "85%",
+    alignItems: "center",
     gap: 0,
     flex: 3,
-    paddingTop: 5
-  }
+    paddingTop: 5,
+  },
 });
 
 export default ConfirmEmailScreen;
