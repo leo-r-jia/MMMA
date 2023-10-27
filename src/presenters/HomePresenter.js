@@ -26,8 +26,10 @@ function useHomePresenter(navigation) {
   async function getCurrentAuthenticatedUserData() {
     try {
       const user = await currentAuthenticatedUser();
-      setUserId(user.attributes.sub);
-      setGivenName(user.attributes.given_name);
+      if (user) {
+        setUserId(user.attributes.sub);
+        setGivenName(user.attributes.given_name);
+      }
     } catch (error) {
       console.error("Get authenticated user data error: ", error);
     }

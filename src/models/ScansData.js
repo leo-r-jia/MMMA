@@ -1,3 +1,4 @@
+// ScansData.js
 import { API, graphqlOperation } from "aws-amplify";
 
 const ScansData = async (userId) => {

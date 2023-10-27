@@ -89,7 +89,14 @@ export const saveScan = async (scan) => {
   return fileKey;
 };
 
-// Upload scan to cloud storage
+/**
+ * Uploads an image to a private S3 bucket with retry logic to allow for S3 bucket initialisation for new users.
+ *
+ * @param {string} fileKey - The key or path under which the image will be stored in S3.
+ * @param {string} imagUri - The URI of the image to upload.
+ * @returns {Promise<void|null>} - A Promise that resolves when the upload is successful, or null if all retry attempts fail.
+ */
+
 const MAX_RETRIES = 3; // Maximum number of retry attempts
 const RETRY_DELAY_MS = 1000; // Delay between retry attempts in milliseconds
 
@@ -98,23 +105,22 @@ const uploadScan = async (fileKey, imagUri) => {
 
   while (attempt < MAX_RETRIES) {
     try {
+      // Ensure user is authenticated so image will be uploaded to their private S3 bucket.
       await currentAuthenticatedUser();
       const response = await fetch(imagUri);
       const blob = await response.blob();
-      // Upload image to private S3 bucket
+      // Upload image to private S3 bucket.
       await Storage.put(fileKey, blob, {
         level: "private",
         contentType: "image/jpeg",
       });
-      // If the upload is successful, break out of the loop
       break;
     } catch (error) {
       console.log(`Error uploading file (attempt ${attempt + 1}):`, error);
       if (attempt < MAX_RETRIES - 1) {
-        // If there are more attempts remaining, wait for a while before retrying
+        // If there are more attempts remaining, wait for a while before retrying.
         await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
       } else {
-        // If there are no more attempts remaining, return null
         return null;
       }
     }
