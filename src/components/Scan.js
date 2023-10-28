@@ -20,7 +20,7 @@ const Scan = ({ scan }) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
-    borderRadius: "10",
+    borderRadius: 10,
     padding: 10,
     paddingTop: 7,
     width: 150,

@@ -4,9 +4,7 @@ import { Auth, API } from "aws-amplify";
 // Function to sign in a user using their email and password
 export async function signIn(email, password) {
   try {
-    console.log("signing in");
     const user = await Auth.signIn(email, password);
-    console.log("signed in", user);
     return user;
   } catch (error) {
     throw error;
@@ -16,7 +14,6 @@ export async function signIn(email, password) {
 // Function to sign up a new user with their first name, email, and password
 export async function signUp(firstName, email, password) {
   try {
-    console.log("signing up");
     const user = await Auth.signUp({
       username: email,
       password,
@@ -27,7 +24,6 @@ export async function signUp(firstName, email, password) {
         enabled: true,
       },
     });
-    console.log("signed");
     return user;
   } catch (error) {
     throw error;

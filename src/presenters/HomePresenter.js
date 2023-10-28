@@ -42,7 +42,9 @@ function useHomePresenter(navigation) {
 
   // Fetch scans when user loads in
   useEffect(() => {
-    fetchScans(userId);
+    if (userId) {
+      fetchScans(userId);
+    }
   }, [userId]);
 
   async function fetchScans(userId) {
@@ -93,11 +95,11 @@ function useHomePresenter(navigation) {
         const fileKey = await saveScan(result);
 
         // Create a scan record in the database with the file key and user ID
-        createScanInDatabase(fileKey, userId);
-      }
+        await createScanInDatabase(fileKey, userId);
 
-      // Fetch and update the list of scans for the user
-      fetchScans(userId);
+        // Fetch and update the list of scans for the user
+        fetchScans(userId);
+      }
     } catch (error) {
       // Handle erros related to uploading scan
       Alert.alert("Error Uploading Scan", error.message, "Try Again");

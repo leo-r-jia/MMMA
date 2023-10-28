@@ -5,6 +5,7 @@ import {
   View,
   Text,
   StyleSheet,
+  StatusBar,
   Image,
   ImageBackground,
   TouchableOpacity,
@@ -94,6 +95,7 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     width: "100%",
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
   headerContainer: {
     flex: 1,
@@ -132,7 +134,7 @@ const styles = StyleSheet.create({
   },
   greyContainer: {
     backgroundColor: "#f2f2f2",
-    borderRadius: "10",
+    borderRadius: 10,
     padding: 12,
     height: 365,
   },
@@ -152,14 +154,14 @@ const styles = StyleSheet.create({
   },
   whiteContainer: {
     backgroundColor: "#ffffff",
-    borderRadius: "5",
+    borderRadius: 5,
     height: 275,
     justifyContent: "center",
     alignItems: "center",
   },
   whiteContainerEmpty: {
     backgroundColor: "#ffffff",
-    borderRadius: "5",
+    borderRadius: 5,
     height: 275,
     justifyContent: "center",
     alignItems: "center",
