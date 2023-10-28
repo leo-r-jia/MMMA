@@ -1,10 +1,8 @@
 # MMMA
 
-### Brief Description of Topic
+[Youtube Demo](https://youtu.be/uesgV-R91jo)
 
 The Mole Mapping Mobile Application (MMMA) is intended to motivate and enable people to monitor their skin health and mole map. It was designed to harness the high-resolution cameras of smartphones and advanced AI technology to allow users to scan their bodies and create a mole map, where any subsequent scans will be compared to detect any changes to existing moles or new moles.
-
-### System Overview
 
 The system developed is a subset of the original system designed in milestone 1. It allows users to securely sign up with their email, confirm their email, sign in, use their camera to “scan” their moles, uploads the images to a cloud storage, and populates their user dashboard with scanned moles across all signed in devices.
 
