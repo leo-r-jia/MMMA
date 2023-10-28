@@ -1,7 +1,7 @@
 // SignUpPresenter.js
 import { useState } from "react";
 import { Alert } from "react-native";
-import { signUp, signIn } from "../models/AuthModel";
+import { signUp } from "../models/AuthModel";
 
 export function useSignUpPresenter(navigation) {
   const [firstName, setFirstName] = useState("");
