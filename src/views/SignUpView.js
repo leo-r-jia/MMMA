@@ -24,62 +24,70 @@ function SignUpView({ navigation }) {
   } = useSignUpPresenter(navigation);
 
   return (
-    <KeyboardAvoidingView
-      style={styles.wrapper}
-      behavior="padding"
-      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : -20}
-    >
-      <View style={styles.container}>
-        <View style={styles.headingContainer}>
-          <Text style={styles.heading}>Sign Up</Text>
-        </View>
-        <View style={styles.inputContainer}>
-          <CustomInput
-            placeholder="First Name"
-            value={firstName}
-            setValue={setFirstName}
-          />
-          <CustomInput
-            placeholder="Email"
-            value={email}
-            setValue={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-          <CustomInput
-            placeholder="Password"
-            value={password}
-            setValue={setPassword}
-            secureTextEntry
-          />
-          <CustomInput
-            placeholder="Confirm Password"
-            value={passwordRepeat}
-            setValue={setPasswordRepeat}
-            secureTextEntry
-          />
-          {!checkPasswordMatch() && (
-            <Text style={styles.errorText}>Passwords must match</Text>
-          )}
-          <View style={styles.buttonContainer}>
+    <View style={styles.white}>
+      <KeyboardAvoidingView
+        style={styles.wrapper}
+        behavior="height"
+        keyboardVerticalOffset={50}
+      >
+        <View style={styles.container}>
+          <View style={styles.headingContainer}>
+            <Text style={styles.heading}>Sign Up</Text>
+          </View>
+          <View style={styles.inputContainer}>
+            <CustomInput
+              placeholder="First Name"
+              value={firstName}
+              setValue={setFirstName}
+            />
+            <CustomInput
+              placeholder="Email"
+              value={email}
+              setValue={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
+            <CustomInput
+              placeholder="Password"
+              value={password}
+              setValue={setPassword}
+              secureTextEntry
+            />
+            <CustomInput
+              placeholder="Confirm Password"
+              value={passwordRepeat}
+              setValue={setPasswordRepeat}
+              secureTextEntry
+            />
+            {!checkPasswordMatch() && (
+              <Text style={styles.errorText}>Passwords must match</Text>
+            )}
+            <View style={styles.buttonContainer}>
+              <CustomButton
+                text={signingUp ? "Signing Up..." : "Sign Up"}
+                onPress={onSignUpPressed}
+              />
+            </View>
             <CustomButton
-              text={signingUp ? "Signing Up..." : "Sign Up"}
-              onPress={onSignUpPressed}
+              text="Have an account? Sign in"
+              onPress={onSignInPressed}
+              type="TERTIARY"
             />
           </View>
-          <CustomButton
-            text="Have an account? Sign in"
-            onPress={onSignInPressed}
-            type="TERTIARY"
-          />
         </View>
-      </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </View>
   );
 }
 
 // Styles for components in SignUpView
 const styles = StyleSheet.create({
+  white: {
+    backgroundColor: "white",
+    width: "100%",
+    alignItems: "center",
+    flex: 1,
+  },
   container: {
     backgroundColor: "white",
     width: "100%",
